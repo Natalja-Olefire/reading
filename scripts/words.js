@@ -1,7 +1,7 @@
 (function () {
 'use strict';
 
-angular.module('Words', [])
+angular.module('Words', ['ngTouch'])
 .controller('WordsController', WordsController)
 .service('WordsService', WordsService);
 
