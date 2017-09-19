@@ -8,11 +8,14 @@
         <link rel="stylesheet" href="styles/style.css">
     </head>
     <body  ng-app="Words">
-    <div class="word" ng-controller="WordsController as words"  ng-click="words.getRandom();" ng-swipe-left="words.getRandom();" ng-swipe-right="words.getRandom();">
+    <div class="word" ng-controller="WordsController as words" ng-click="words.getRandom();" ng-swipe-left="words.getRandom();" ng-swipe-right="words.getRandom();">
        {{words.getLastRandom();}}
     </div>
     <script src="scripts/angular.min.js"></script>
     <script src="scripts/angular-touch.min.js"></script>
-    <script src="scripts/words.js"></script>
+    
+<!--     <script src="scripts/data.module.js"></script>
+    <script src="scripts/loaddata.service.js"></script>
+ -->    <script src="scripts/words.js"></script>
     </body>
 </html>

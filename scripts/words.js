@@ -3,99 +3,68 @@
 
 angular.module('Words', ['ngTouch'])
 .controller('WordsController', WordsController)
-.service('WordsService', WordsService);
+.service('LoadDataService', LoadDataService)
+.service('WordsService', WordsService)
+.constant('fileRoot', "https://natalja-olefire.github.io/reading")
+.constant('fileList', ["words.txt", "words2.txt"]);
 
-WordsController.$inject = ['WordsService'];
-function WordsController(WordsService) {
-  var words = this;
-  var lastRandom=WordsService.getRandom();
 
-  words.getLastRandom = function() {
+WordsController.$inject = ['LoadDataService', 'WordsService'];
+function WordsController(LoadDataService, WordsService) {
+  var wordsController = this;
+  var lastRandom;
+  var words;
+
+  LoadDataService.loadWords().then(function(returnedWords) {
+      words = returnedWords;
+
+      console.log("Words are loaded: ");
+      console.log(words);
+
+
+      lastRandom=WordsService.getRandom(words);
+  });
+
+  wordsController.getLastRandom = function() {
     return lastRandom;
   }
 
-  words.getRandom = function() {
-    lastRandom = WordsService.getRandom();
+  wordsController.getRandom = function() {
+    lastRandom = WordsService.getRandom(words);
   }
 }
+
+
+LoadDataService.$inject = ['$http', 'fileRoot', 'fileList']
+function LoadDataService($http, fileRoot, fileList) {
+  var service = this;
+
+  service.loadWords = function() {
+    return $http.get(fileRoot + "/" + fileList[0]).then(function (response) {
+      var words = response.data.split('\n');
+      console.log(words);
+      return words;
+    });
+    return promise;
+  }
+
+}
+
 
 function WordsService() {
   var service = this;
 
-  var words=[
-    "кракозябра",
-    "балалайка",
-    "медведь",
-    "кошка",
-    "спит",
-    "слон",
-    "жираф",
-    "ответ",
-    "красивый",
-    "Луна",
-    "Земля",
-    "школа",
-    "ошибка",
-    "смешной",
-    "кусочек",
-    "растёт",
-    "весёлый",
-    "радость",
-    "природа",
-    "грустить",
-    "жевать",
-    "акула",
-    "селёдка",
-    "соль",
-    "парашут",
-    "крапива",
-    "прямая",
-    "колба",
-    "робот",
-		"динозавр",
-		"банан",
-		"акробат",
-		"крошка",
-		"йогурт",
-		"энциклопедия",
-		"яхта",
-		"крышка",
-		"противный",
-		"кислый",
-		"сладкий",
-		"горький",
-		"крыса",
-		"совсем",
-		"обидный",
-		"радостный",
-		"гора",
-		"грибы",
-		"кружок",
-		"атлас",
-		"приходить",
-		"грозный",
-		"гражданин",
-		"карнавал",
-		"компьютер",
-		"монитор",
-		"ковёр",
-		"окно",
-		"сорока",
-		"ворона",
-		"обидеть",
-		"слышать",
-		"видеть",
-		"зависеть",
-		"зависать",    
-    "телевизор"
-];
-
- var word;
-
- service.getRandom = function () {
+  var word;
+  
+  service.getRandom = function (words) {
+    console.log("getRandom:");
+    console.log(words);
     word = words[Math.floor((Math.random() * words.length))];
+    console.log("selected: " + word);
     return word;
   };
+
+
 }
 
 })();
